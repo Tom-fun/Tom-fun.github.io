@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultra Time OS Pro</title>
+
+<style>
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
+background: radial-gradient(circle at top,#0a0f1f,#05060c);
+color:white;
+overflow:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:240px;
+height:100vh;
+position:absolute;
+left:0;
+top:0;
+padding:20px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(25px);
+border-right:1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar h2{color:#a78bfa;margin-bottom:12px;}
+
+.sidebar button{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:none;
+border-radius:12px;
+background:transparent;
+color:white;
+cursor:pointer;
+text-align:left;
+transition:0.2s;
+}
+.sidebar button:hover{background:rgba(124,92,255,0.25);transform:translateX(6px);}
+
+/* PAGES */
+.page{
+margin-left:260px;
+padding:20px;
+display:none;
+height:100vh;
+overflow:auto;
+}
+.active{display:block}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(28px);
+border-radius:22px;
+padding:22px;
+margin-bottom:15px;
+box-shadow:0 25px 90px rgba(0,0,0,0.8);
+}
+
+/* BIG TEXT */
+.big{font-size:52px;text-align:center;font-weight:300;}
+
+/* BUTTON */
+.btn{
+padding:10px 14px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+margin-top:10px;
+}
+.purple{background:#7c5cff;color:white}
+.gray{background:#2a2a2a;color:white}
+
+/* INPUTS */
+input,textarea,select{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:12px;
+border:none;
+background:rgba(255,255,255,0.08);
+color:white;
+outline:none;
+}
+
+/* TIMER */
+.timerBox{
+background:linear-gradient(145deg,rgba(255,255,255,0.08),rgba(0,0,0,0.25));
+border-radius:26px;
+padding:20px;
+}
+
+/* CALENDAR */
+.calendarGrid{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:6px;
+margin-top:15px;
+}
+
+.day{
+height:70px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:12px;
+background:rgba(255,255,255,0.05);
+cursor:pointer;
+transition:0.2s;
+}
+.day:hover{background:#7c5cff;transform:scale(1.05);}
+
+/* ALARM STYLE (APPLE-STYLE PANEL) */
+.alarmBox{
+display:flex;
+gap:10px;
+align-items:center;
+font-size:30px;
+justify-content:center;
+}
+
+.smallRow{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+.smallRow button{flex:1;}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h2>Time OS</h2>
+<button onclick="show('dash')">Dashboard</button>
+<button onclick="show('timer')">Timer</button>
+<button onclick="show('alarm')">Alarm</button>
+<button onclick="show('calendar')">Calendar</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash" class="page active">
+<div class="card">
+<div class="big" id="clock">00:00:00</div>
+</div>
+</div>
+
+<!-- TIMER -->
+<div id="timer" class="page">
+<div class="card timerBox">
+<h2>Timer</h2>
+
+<select id="mode" onchange="loadTimer()">
+<option value="h">Hours</option>
+<option value="m">Minutes</option>
+<option value="s">Seconds</option>
+</select>
+
+<select id="valueBox"></select>
+
+<button class="btn purple" onclick="startTimer()">Start</button>
+
+<div class="big" id="tshow">0:00:00</div>
+</div>
+</div>
+
+<!-- ALARM (FULL APPLE STYLE) -->
+<div id="alarm" class="page">
+<div class="card">
+
+<h2>Alarm</h2>
+
+<div class="alarmBox">
+<input id="hour" type="number" min="1" max="12" value="5">
+<span>:</span>
+<input id="min" type="number" min="0" max="59" value="18">
+</div>
+
+<div class="smallRow">
+<button id="amBtn" class="btn gray" onclick="setAMPM('am')">AM</button>
+<button id="pmBtn" class="btn purple" onclick="setAMPM('pm')">PM</button>
+</div>
+
+<input id="label" placeholder="Label (Alarm name)">
+
+<select id="sound">
+<option>Radial</option>
+<option>Classic</option>
+<option>Digital</option>
+</select>
+
+<select id="snooze">
+<option value="5">5 min snooze</option>
+<option value="9" selected>9 min snooze</option>
+<option value="10">10 min snooze</option>
+</select>
+
+<button class="btn purple" onclick="saveAlarm()">Save Alarm</button>
+
+<div id="alarmList"></div>
+
+</div>
+</div>
+
+<!-- CALENDAR (UNCHANGED STRUCTURE) -->
+<div id="calendar" class="page">
+<div class="card">
+
+<h2>Calendar</h2>
+
+<select id="year"></select>
+
+<div class="calendarGrid" id="grid"></div>
+
+</div>
+</div>
+
+<!-- DAY EDITOR -->
+<div id="editor" class="page">
+<div class="card">
+
+<h2 id="title"></h2>
+<textarea id="note"></textarea>
+
+<button class="btn purple" onclick="save()">Save</button>
+<button class="btn gray" onclick="back()">Back</button>
+
+</div>
+</div>
+
+<script>
+
+/* NAV */
+function show(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+/* CLOCK */
+setInterval(()=>{
+let d=new Date();
+let h=d.getHours();
+let m=d.getMinutes();
+let s=d.getSeconds();
+
+let am=h>=12?"PM":"AM";
+h=h%12||12;
+
+clock.innerText=`${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')} ${am}`;
+},1000);
+
+/* TIMER */
+let timer;
+let total=0;
+
+function loadTimer(){
+let mode=document.getElementById("mode").value;
+valueBox.innerHTML="";
+for(let i=0;i<(mode==="h"?24:60);i++){
+valueBox.innerHTML+=`<option>${i}</option>`;
+}
+}
+loadTimer();
+
+function startTimer(){
+let mode=document.getElementById("mode").value;
+let val=parseInt(valueBox.value);
+
+total = mode==="h"?val*3600:mode==="m"?val*60:val;
+
+clearInterval(timer);
+
+timer=setInterval(()=>{
+if(total<=0){
+clearInterval(timer);
+tshow.innerText="DONE";
+return;
+}
+
+total--;
+
+let h=Math.floor(total/3600);
+let m=Math.floor((total%3600)/60);
+let s=total%60;
+
+tshow.innerText=`${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+},1000);
+}
+
+/* ALARM FULL SYSTEM */
+let alarms=[];
+let mode="pm";
+
+function setAMPM(m){
+mode=m;
+amBtn.className = m==="am"?"btn purple":"btn gray";
+pmBtn.className = m==="pm"?"btn purple":"btn gray";
+}
+
+function saveAlarm(){
+
+let time = `${hour.value.toString().padStart(2,'0')}:${min.value.toString().padStart(2,'0')} ${mode}`;
+
+let alarm={
+time,
+label:label.value,
+sound:sound.value,
+snooze:snooze.value
+};
+
+alarms.push(alarm);
+renderAlarms();
+}
+
+function renderAlarms(){
+alarmList.innerHTML="";
+
+alarms.forEach((a,i)=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`
+<b>${a.time}</b><br>
+${a.label}<br>
+<small>${a.sound} • Snooze ${a.snooze}min</small>
+<button class="btn gray" onclick="removeAlarm(${i})">Delete</button>
+`;
+alarmList.appendChild(div);
+});
+}
+
+function removeAlarm(i){
+alarms.splice(i,1);
+renderAlarms();
+}
+
+/* CHECK ALARMS */
+setInterval(()=>{
+let d=new Date();
+let h=d.getHours();
+let m=d.getMinutes();
+let ampm=h>=12?"pm":"am";
+h=h%12||12;
+
+let now=`${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')} ${ampm}`;
+
+alarms.forEach(a=>{
+if(a.time===now){
+alert("ALARM: " + a.label);
+}
+});
+},1000);
+
+/* CALENDAR */
+let data={};
+let current="";
+
+for(let y=2024;y<=2027;y++){
+year.innerHTML+=`<option>${y}</option>`;
+}
+
+function render(){
+grid.innerHTML="";
+let y=year.value;
+let days=new Date(y,12,0).getDate();
+
+for(let i=1;i<=days;i++){
+let d=document.createElement("div");
+d.className="day";
+d.innerText=i;
+
+d.onclick=()=>open(i,y);
+grid.appendChild(d);
+}
+}
+year.onchange=render;
+render();
+
+function open(day,y){
+current=`${y}-${day}`;
+title.innerText=current;
+note.value=data[current]||"";
+show('editor');
+}
+
+function save(){
+data[current]=note.value;
+}
+
+function back(){
+show('calendar');
+render();
+}
+
+</script>
+
+</body>
+</html>
