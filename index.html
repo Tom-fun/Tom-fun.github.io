@@ -96,7 +96,7 @@ border-radius:26px;
 padding:20px;
 }
 
-/* CALENDAR */
+/* CALENDAR GRID */
 .calendarGrid{
 display:grid;
 grid-template-columns:repeat(7,1fr);
@@ -116,7 +116,7 @@ transition:0.2s;
 }
 .day:hover{background:#7c5cff;transform:scale(1.05);}
 
-/* ALARM STYLE (APPLE-STYLE PANEL) */
+/* ALARM */
 .alarmBox{
 display:flex;
 gap:10px;
@@ -171,7 +171,7 @@ margin-top:10px;
 </div>
 </div>
 
-<!-- ALARM (FULL APPLE STYLE) -->
+<!-- ALARM -->
 <div id="alarm" class="page">
 <div class="card">
 
@@ -188,7 +188,7 @@ margin-top:10px;
 <button id="pmBtn" class="btn purple" onclick="setAMPM('pm')">PM</button>
 </div>
 
-<input id="label" placeholder="Label (Alarm name)">
+<input id="label" placeholder="Label">
 
 <select id="sound">
 <option>Radial</option>
@@ -209,27 +209,28 @@ margin-top:10px;
 </div>
 </div>
 
-<!-- CALENDAR (UNCHANGED STRUCTURE) -->
+<!-- CALENDAR (FIXED) -->
 <div id="calendar" class="page">
 <div class="card">
 
 <h2>Calendar</h2>
 
-<select id="year"></select>
+<select id="yearSelect"></select>
+<select id="monthSelect"></select>
 
 <div class="calendarGrid" id="grid"></div>
 
 </div>
 </div>
 
-<!-- DAY EDITOR -->
+<!-- EDITOR -->
 <div id="editor" class="page">
 <div class="card">
 
 <h2 id="title"></h2>
 <textarea id="note"></textarea>
 
-<button class="btn purple" onclick="save()">Save</button>
+<button class="btn purple" onclick="saveNote()">Save</button>
 <button class="btn gray" onclick="back()">Back</button>
 
 </div>
@@ -283,7 +284,6 @@ clearInterval(timer);
 tshow.innerText="DONE";
 return;
 }
-
 total--;
 
 let h=Math.floor(total/3600);
@@ -294,7 +294,7 @@ tshow.innerText=`${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,
 },1000);
 }
 
-/* ALARM FULL SYSTEM */
+/* ALARM */
 let alarms=[];
 let mode="pm";
 
@@ -305,23 +305,20 @@ pmBtn.className = m==="pm"?"btn purple":"btn gray";
 }
 
 function saveAlarm(){
-
 let time = `${hour.value.toString().padStart(2,'0')}:${min.value.toString().padStart(2,'0')} ${mode}`;
 
-let alarm={
+alarms.push({
 time,
 label:label.value,
 sound:sound.value,
 snooze:snooze.value
-};
+});
 
-alarms.push(alarm);
 renderAlarms();
 }
 
 function renderAlarms(){
 alarmList.innerHTML="";
-
 alarms.forEach((a,i)=>{
 let div=document.createElement("div");
 div.className="card";
@@ -357,45 +354,64 @@ alert("ALARM: " + a.label);
 });
 },1000);
 
-/* CALENDAR */
-let data={};
-let current="";
+/* CALENDAR FIXED SYSTEM */
+let data = {};
+let current = "";
 
-for(let y=2024;y<=2027;y++){
-year.innerHTML+=`<option>${y}</option>`;
+const yearSelect = document.getElementById("yearSelect");
+const monthSelect = document.getElementById("monthSelect");
+const grid = document.getElementById("grid");
+
+for(let y=2020;y<=2035;y++){
+yearSelect.innerHTML+=`<option value="${y}">${y}</option>`;
 }
 
-function render(){
+const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+months.forEach((m,i)=>{
+monthSelect.innerHTML+=`<option value="${i}">${m}</option>`;
+});
+
+function renderCalendar(){
 grid.innerHTML="";
-let y=year.value;
-let days=new Date(y,12,0).getDate();
+
+let y=parseInt(yearSelect.value);
+let m=parseInt(monthSelect.value);
+
+let days=new Date(y,m+1,0).getDate();
 
 for(let i=1;i<=days;i++){
 let d=document.createElement("div");
 d.className="day";
 d.innerText=i;
 
-d.onclick=()=>open(i,y);
+d.onclick=()=>openDay(i,m,y);
+
 grid.appendChild(d);
 }
 }
-year.onchange=render;
-render();
 
-function open(day,y){
-current=`${y}-${day}`;
-title.innerText=current;
+yearSelect.onchange=renderCalendar;
+monthSelect.onchange=renderCalendar;
+
+yearSelect.value=new Date().getFullYear();
+monthSelect.value=new Date().getMonth();
+renderCalendar();
+
+function openDay(day,month,year){
+current=`${year}-${month}-${day}`;
+title.innerText=`${day}/${month+1}/${year}`;
 note.value=data[current]||"";
 show('editor');
 }
 
-function save(){
+function saveNote(){
 data[current]=note.value;
 }
 
 function back(){
 show('calendar');
-render();
+renderCalendar();
 }
 
 </script>
