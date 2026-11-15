@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monkey Button</title>
+<style>
+:root{color-scheme:dark;--ink:#f5f1e9;--muted:#a9a49c;--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);overflow:hidden;background:#101114}
+.desktop{height:100%;position:relative;isolation:isolate;background:radial-gradient(ellipse at 50% 44%,#34302b 0,#1b1b1c 34%,#111215 74%)}
+.desktop:before,.desktop:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1}.desktop:before{opacity:.22;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(ellipse at center,#000 0%,transparent 78%)}
+.topbar{height:42px;position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#d6d1c9;font-size:12px;letter-spacing:.02em;background:rgba(0,0,0,.18);border-bottom:1px solid rgba(255,255,255,.055);backdrop-filter:blur(18px)}.brand{display:flex;align-items:center;gap:9px;font-weight:650}.brand-dot{width:7px;height:7px;border-radius:50%;background:#e7a85c;box-shadow:0 0 12px #e7a85c}.top-right{color:#96918a}
+.center{position:absolute;inset:42px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 18px 62px;text-align:center}.orb-wrap{position:relative;width:194px;height:194px;margin-bottom:29px}.orb-glow{position:absolute;inset:-24px;border-radius:50%;background:rgba(219,153,78,.16);filter:blur(28px);transition:all .25s}.monkey-button{position:relative;width:100%;height:100%;padding:0;border:1px solid rgba(255,255,255,.38);border-radius:50%;overflow:hidden;cursor:pointer;background:#d6b58a;box-shadow:0 18px 60px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.5);transition:transform .18s,box-shadow .18s}.monkey-button img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}.monkey-button:hover{transform:scale(1.045);box-shadow:0 20px 72px rgba(0,0,0,.58),0 0 0 8px rgba(255,255,255,.035)}.monkey-button:hover img{transform:scale(1.06)}.monkey-button:active{transform:scale(.97)}.monkey-button:focus-visible{outline:3px solid #e8b778;outline-offset:8px}
+h1{font-size:clamp(23px,3vw,31px);font-weight:560;letter-spacing:-.045em;margin:0 0 9px}.subtitle{font-size:13px;color:#aaa49c;margin:0}.hint{display:flex;align-items:center;gap:8px;margin-top:24px;color:#8c877f;font-size:11px;letter-spacing:.11em;text-transform:uppercase}.hint span{width:4px;height:4px;border-radius:50%;background:#dba15e}
+.bottom{position:absolute;bottom:21px;left:0;right:0;text-align:center;color:#6f6b65;font-size:11px;letter-spacing:.04em}
+.popup{position:absolute;width:min(330px,calc(100vw - 28px));height:390px;max-height:calc(100vh - 90px);border:1px solid rgba(255,255,255,.19);border-radius:17px;background:linear-gradient(145deg,rgba(43,42,41,.97),rgba(25,25,27,.97));box-shadow:0 26px 85px rgba(0,0,0,.65),inset 0 1px rgba(255,255,255,.09);backdrop-filter:blur(22px);overflow:hidden;animation:pop .24s cubic-bezier(.2,.8,.2,1);z-index:5}
+@keyframes pop{from{opacity:0;transform:translateY(13px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+.window-head{height:43px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.025);cursor:grab;user-select:none}.window-head:active{cursor:grabbing}.window-title{font-size:11px;color:#d8d2c9;letter-spacing:.04em;display:flex;align-items:center;gap:8px}.window-title:before{content:"";width:6px;height:6px;border-radius:50%;background:#d99d5a;box-shadow:0 0 9px #d99d5a}.close{border:0;color:#aaa;background:transparent;font-size:21px;line-height:1;cursor:pointer;width:27px;height:27px;border-radius:8px}.close:hover{background:rgba(255,255,255,.1);color:#fff}.popup-content{height:calc(100% - 43px);display:flex;flex-direction:column;align-items:center;padding:18px 20px 16px;text-align:center}.popup-image{width:190px;height:190px;max-width:72%;object-fit:cover;border-radius:50%;border:1px solid rgba(255,255,255,.25);box-shadow:0 12px 32px rgba(0,0,0,.36);margin:1px 0 14px}.popup h2{font-size:19px;font-weight:570;letter-spacing:-.03em;margin:0 0 5px}.popup p{font-size:11px;color:#aaa49c;margin:0 0 15px}.audio-row{width:100%;margin-top:auto;padding:10px 11px 9px;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.045);display:flex;align-items:center;gap:10px}.play{width:34px;height:34px;flex:0 0 34px;border:0;border-radius:50%;background:#e2ad70;color:#241b12;display:grid;place-items:center;cursor:pointer;font-size:13px}.play:hover{background:#f1c28b}.audio-meta{text-align:left;min-width:0;flex:1}.audio-name{font-size:11px;color:#e8e1d7;margin-bottom:4px}.audio-status{font-size:10px;color:#928b81}.audio-tag{font-size:9px;color:#827b71;letter-spacing:.1em;text-transform:uppercase;margin-top:11px}
+@media(max-width:520px){.orb-wrap{width:166px;height:166px}.topbar{padding:0 14px}.top-right{font-size:10px}.popup{height:365px}.popup-image{width:165px;height:165px}}
+</style>
+</head>
+<body>
+<main class="desktop" id="desktop">
+  <header class="topbar"><div class="brand"><i class="brand-dot"></i> MONKEY DESKTOP</div><div class="top-right">A tiny button. A lot of monkeys.</div></header>
+  <section class="center">
+    <div class="orb-wrap"><div class="orb-glow"></div><button class="monkey-button" id="launch" aria-label="Open a monkey window"><img src="assets/monkey.png" alt="A smiling cartoon monkey"></button></div>
+    <h1>Press the monkey.</h1><p class="subtitle">Go on. You know you want to.</p>
+    <div class="hint"><span></span> CLICK THE CIRCLE <span></span></div>
+  </section>
+  <footer class="bottom">MONKEY DESKTOP · CLICK TO OPEN ANOTHER WINDOW</footer>
+</main>
+<script>
+const desktop=document.getElementById('desktop');
+const launch=document.getElementById('launch');
+let count=0, topZ=10;
+function openMonkey(){
+  count++;
+  const win=document.createElement('section');win.className='popup';win.style.zIndex=++topZ;
+  const w=Math.min(330,window.innerWidth-28),h=Math.min(390,window.innerHeight-90);
+  const maxX=Math.max(10,window.innerWidth-w-10),maxY=Math.max(52,window.innerHeight-h-12);
+  const x=Math.min(maxX,Math.max(10,window.innerWidth/2-w/2+(count%5-2)*34));
+  const y=Math.min(maxY,Math.max(52,window.innerHeight/2-h/2+(count%5-2)*25));
+  win.style.left=x+'px';win.style.top=y+'px';
+  win.innerHTML=`<div class="window-head"><div class="window-title">MONKEY WINDOW #${count}</div><button class="close" aria-label="Close window">×</button></div><div class="popup-content"><img class="popup-image" src="assets/monkey.png" alt="Smiling monkey"><h2>You've been monkeyed.</h2><p>Here's your little monkey moment.</p><div class="audio-row"><button class="play" aria-label="Play sound">▶</button><div class="audio-meta"><div class="audio-name">Monkey sound</div><div class="audio-status">Tap to play again</div></div></div><div class="audio-tag">Sound included</div><audio preload="auto" src="assets/monkey-sound.m4a"></audio></div>`;
+  desktop.appendChild(win);
+  const audio=win.querySelector('audio'),play=win.querySelector('.play'),status=win.querySelector('.audio-status');
+  const start=()=>{audio.currentTime=0;audio.play().then(()=>{play.textContent='Ⅱ';status.textContent='Playing…'}).catch(()=>{status.textContent='Tap play to hear the sound'})};
+  audio.addEventListener('ended',()=>{play.textContent='▶';status.textContent='Tap to play again'});
+  play.addEventListener('click',()=>{if(audio.paused)start();else{audio.pause();play.textContent='▶';status.textContent='Paused'}});
+  win.querySelector('.close').addEventListener('click',()=>{audio.pause();win.remove()});
+  win.addEventListener('pointerdown',()=>win.style.zIndex=++topZ);
+  const bar=win.querySelector('.window-head');let drag=null;
+  bar.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;const r=win.getBoundingClientRect();drag={dx:e.clientX-r.left,dy:e.clientY-r.top};bar.setPointerCapture(e.pointerId)});
+  bar.addEventListener('pointermove',e=>{if(!drag)return;const nx=Math.max(0,Math.min(window.innerWidth-win.offsetWidth,e.clientX-drag.dx));const ny=Math.max(42,Math.min(window.innerHeight-win.offsetHeight,e.clientY-drag.dy));win.style.left=nx+'px';win.style.top=ny+'px'});
+  bar.addEventListener('pointerup',()=>drag=null);bar.addEventListener('pointercancel',()=>drag=null);
+  start();
+}
+launch.addEventListener('click',openMonkey);
+</script>
+</body>
+</html>
