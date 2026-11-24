@@ -1,0 +1,9 @@
+CLASSICAL CHESS
+
+1. Unzip the downloaded folder.
+2. Open index.html in your browser.
+3. Enter the player names and choose a time control.
+4. White moves first. Click a piece, then click its destination, or drag it with your mouse.
+
+Keep the assets folder and the JavaScript/CSS files next to index.html.
+Everything runs locally. No internet connection is needed.

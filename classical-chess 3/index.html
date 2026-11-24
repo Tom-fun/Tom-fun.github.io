@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111719">
+  <meta name="description" content="A traditional two-player chess game for one device. Works offline.">
+  <title>Classical Chess</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell" id="appShell">
+    <header class="app-header">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="presentation"><path d="M24 5v8m-5-4h10M14 19c0-5 4-8 10-8s10 3 10 8l-4 10H18zM12 31h24l3 6H9zM14 40h20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="brand-name">CLASSICAL <span>CHESS</span></div>
+          <div class="brand-subtitle">A traditional game for two</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="offline-indicator"><span></span> LOCAL GAME</span>
+        <button class="icon-button sound-toggle" id="soundToggle" type="button" aria-pressed="false" title="Toggle move sounds">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4h3l4 3V7l-4 3H4Z"/><path d="M15 9a4 4 0 0 1 0 6M17.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+          <span>Sound off</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">STANDARD CHESS · ONE DEVICE</p>
+        <h1>The board is yours.</h1>
+        <p class="heading-copy">A quiet place for a proper game of chess.</p>
+      </div>
+      <div class="heading-rule" aria-hidden="true"></div>
+    </section>
+
+    <section class="game-layout" aria-label="Chess game">
+      <div class="board-column" id="boardColumn">
+        <section class="player-card black-card" id="blackPlayerCard" aria-label="Black player">
+          <div class="player-ident">
+            <span class="player-disc black-disc" aria-hidden="true"><img src="assets/pieces/black-king.svg" alt=""></span>
+            <div class="player-labels"><span class="player-side">BLACK</span><input id="blackName" class="player-name" maxlength="20" value="Player 2" aria-label="Black player's name"></div>
+          </div>
+          <div class="clock-block"><span class="clock-caption">TIME</span><output class="clock" id="blackClock">—:——</output></div>
+        </section>
+
+        <div class="board-status-row">
+          <div class="turn-status" id="turnStatus"><span class="turn-dot"></span><span id="turnText">White to move</span></div>
+          <div class="game-status" id="gameStatus">Game in progress</div>
+        </div>
+
+        <button class="board-fullscreen-exit" id="boardFullscreenExit" type="button" aria-label="Exit board fullscreen">× <span>Exit fullscreen</span></button>
+        <div class="board-stage" id="boardStage">
+          <div class="board-frame">
+            <div class="board-grid" id="boardGrid" role="grid" aria-label="Chessboard">
+              <!-- Squares are rendered by app.js -->
+            </div>
+          </div>
+        </div>
+
+        <section class="player-card white-card active" id="whitePlayerCard" aria-label="White player">
+          <div class="player-ident">
+            <span class="player-disc white-disc" aria-hidden="true"><img src="assets/pieces/white-king.svg" alt=""></span>
+            <div class="player-labels"><span class="player-side">WHITE</span><input id="whiteName" class="player-name" maxlength="20" value="Player 1" aria-label="White player's name"></div>
+          </div>
+          <div class="clock-block"><span class="clock-caption">TIME</span><output class="clock" id="whiteClock">—:——</output></div>
+        </section>
+
+        <p class="board-footnote"><span class="footnote-mark">◆</span> White begins. Take turns moving one piece at a time.</p>
+      </div>
+
+      <aside class="side-panel" aria-label="Game controls and move history">
+        <section class="panel-card time-panel">
+          <div class="panel-heading"><div><p class="eyebrow">GAME SETUP</p><h2>Time control</h2></div><span class="panel-icon" aria-hidden="true">◷</span></div>
+          <label class="select-wrap" for="timeControl"><span class="visually-hidden">Time control</span>
+            <select id="timeControl">
+              <option value="0">No clock</option>
+              <option value="5">5 minutes</option>
+              <option value="10">10 minutes</option>
+              <option value="15">15 minutes</option>
+              <option value="30">30 minutes</option>
+              <option value="custom">Custom time</option>
+            </select>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>
+          </label>
+          <div class="custom-time" id="customTimeWrap" hidden>
+            <label for="customMinutes">Minutes per player</label>
+            <input id="customMinutes" type="number" min="1" max="180" value="10" inputmode="numeric">
+          </div>
+          <p class="panel-hint">The clock switches after every legal move.</p>
+        </section>
+
+        <section class="panel-card actions-panel">
+          <div class="panel-heading"><div><p class="eyebrow">GAME</p><h2>Controls</h2></div></div>
+          <div class="action-grid">
+            <button class="action-button primary-action" id="newGame" type="button"><span class="action-symbol">＋</span><span>New game</span></button>
+            <button class="action-button" id="restartGame" type="button"><span class="action-symbol">↻</span><span>Restart</span></button>
+            <button class="action-button" id="fullscreenButton" type="button"><span class="action-symbol fullscreen-symbol">⛶</span><span>Fullscreen</span></button>
+            <button class="action-button" id="offerDraw" type="button"><span class="action-symbol">＝</span><span>Offer draw</span></button>
+            <button class="action-button resign-action" id="resignGame" type="button"><span class="action-symbol">⚑</span><span>Resign</span></button>
+          </div>
+          <div class="draw-response" id="drawResponse" hidden>
+            <p id="drawMessage">White offers a draw.</p>
+            <div><button type="button" class="mini-button accept-draw" id="acceptDraw">Accept</button><button type="button" class="mini-button" id="declineDraw">Decline</button></div>
+          </div>
+        </section>
+
+        <section class="panel-card history-panel">
+          <div class="panel-heading history-heading"><div><p class="eyebrow">NOTATION</p><h2>Move history</h2></div><span class="move-count" id="moveCount">0</span></div>
+          <div class="move-table-wrap" id="moveTableWrap">
+            <table class="move-table" aria-label="Moves in standard algebraic notation">
+              <thead><tr><th>No.</th><th>White</th><th>Black</th></tr></thead>
+              <tbody id="moveHistory"><tr class="empty-history"><td colspan="3">Your moves will appear here.</td></tr></tbody>
+            </table>
+          </div>
+          <div class="history-footer"><span id="historySummary">No moves yet</span><span class="notation-tag">SAN</span></div>
+        </section>
+
+        <section class="result-panel" id="resultPanel" hidden aria-live="polite">
+          <div class="result-emblem" aria-hidden="true"><img src="assets/pieces/white-king.svg" alt="" /></div>
+          <div><p class="eyebrow">GAME RESULT</p><h2 id="resultTitle">Game over</h2><p id="resultDescription">The game has finished.</p></div>
+        </section>
+      </aside>
+    </section>
+
+    <footer class="app-footer"><span>CLASSICAL CHESS</span><span>Traditional rules · Local play · No internet required</span></footer>
+  </main>
+
+  <dialog class="promotion-dialog" id="promotionDialog" aria-labelledby="promotionTitle">
+    <form method="dialog" class="promotion-content">
+      <p class="eyebrow">PAWN PROMOTION</p>
+      <h2 id="promotionTitle">Choose a piece</h2>
+      <p>Your pawn has reached the other side of the board.</p>
+      <div class="promotion-options" id="promotionOptions"></div>
+      <button class="cancel-promotion" value="cancel">Cancel</button>
+    </form>
+  </dialog>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
