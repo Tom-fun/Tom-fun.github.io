@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 350" role="img" aria-label="Black knight">
+<defs>
+      <linearGradient id="piece" x1="0" y1="0" x2="1" y2="0.25"><stop offset="0" stop-color="#82898a"/><stop offset="0.23" stop-color="#44484a"/><stop offset="0.58" stop-color="#25292c"/><stop offset="1" stop-color="#111416"/></linearGradient>
+      <linearGradient id="base" x1="0" y1="0" x2="0.2" y2="1"><stop offset="0" stop-color="#82898a"/><stop offset="0.27" stop-color="#44484a"/><stop offset="0.72" stop-color="#25292c"/><stop offset="1" stop-color="#111416"/></linearGradient>
+      <linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#82898a" stop-opacity=".72"/><stop offset="1" stop-color="#82898a" stop-opacity="0"/></linearGradient>
+      <filter id="shadow" x="-30%" y="-20%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5"/></filter>
+    </defs>
+  <ellipse cx="151" cy="323" rx="82" ry="9" fill="#000" opacity=".18" filter="url(#shadow)"/>
+  <g stroke="#080a0b" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M78 304 C82 290 99 282 119 280 L181 280 C201 282 218 290 222 304 L218 315 C213 324 195 329 150 330 C105 329 87 324 82 315 Z" fill="url(#base)"/>
+    <path d="M91 287 C107 278 125 275 150 275 C175 275 193 278 209 287 L205 295 C184 301 116 301 95 295 Z" fill="url(#piece)"/>
+    <path d="M103 308 C124 314 176 314 197 308" fill="none" stroke="#82898a" stroke-opacity=".55" stroke-width="3"/>
+    
+  <path class="body" d="M104 265 C110 243 111 221 119 202 C126 184 139 168 151 157 C133 154 115 145 105 131 C99 122 99 108 106 98 C113 87 125 85 138 91 C149 75 170 70 187 83 C202 94 209 116 205 136 C201 157 185 175 174 193 C169 211 176 241 192 265 Z"/>
+  <path class="body" d="M139 94 C134 76 135 57 146 42 C150 58 158 67 168 72 C173 58 184 48 198 46 C193 62 194 75 201 89 Z"/>
+  <path class="shine" d="M119 111 C119 97 131 91 141 99 C132 105 132 120 143 130 C132 128 121 122 119 111 Z"/>
+  <path class="detail" d="M172 112 C179 108 186 109 191 115"/>
+  <circle class="eye" cx="177" cy="103" r="4.5"/>
+  <path class="detail" d="M151 163 C163 167 178 164 188 155"/>
+
+    <path class="body" d="M108 264 C115 271 185 271 192 264 L202 280 C183 289 117 289 98 280 Z" fill="url(#piece)"/>
+    <path d="M98 281 C119 291 181 291 202 281" fill="none" stroke="#82898a" stroke-opacity=".5" stroke-width="3"/>
+  </g>
+  <style>
+    .body{fill:url(#piece);stroke:#080a0b;stroke-width:4.2;stroke-linejoin:round;}
+    .neck{fill:url(#piece);stroke:#080a0b;stroke-width:4.2;stroke-linejoin:round;}
+    .shine{fill:url(#shineGrad);stroke:none;}
+    .detail{fill:none;stroke:#101314;stroke-width:3.3;stroke-linecap:round;opacity:.88;}
+    .small{fill:url(#base);stroke:#080a0b;stroke-width:3.8;}
+    .cross{fill:url(#base);stroke:#080a0b;stroke-width:3.2;stroke-linejoin:round;}
+    .eye{fill:#e8d8ad;stroke:#080a0b;stroke-width:1.5;}
+  </style>
+</svg>

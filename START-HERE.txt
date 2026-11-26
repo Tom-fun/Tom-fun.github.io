@@ -1,0 +1,8 @@
+CLASSICAL CHESS — KINDLE COLORSOFT EDITION
+
+1. Upload the whole classical-chess folder to your website.
+2. Keep index.html, styles.css, app.js, engine.js and the assets folder together.
+3. Open the website address on your Kindle Colorsoft using its Web Browser.
+4. Tap a piece, then tap its highlighted destination square.
+
+White moves first. No dragging, animations, sound, external libraries, or online opponent are used.
